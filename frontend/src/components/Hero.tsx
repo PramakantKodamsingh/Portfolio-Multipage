@@ -36,7 +36,7 @@ const Hero = () => {
   const handleResumeDownload = () => {
     // Create a sample resume PDF content (in a real app, you'd have an actual PDF file)
     const resumeContent = `
-John Doe - Full Stack Developer Resume
+Pramakant Kodamsingh - Full Stack Developer Resume
 
 Contact Information:
 Email: john.doe@example.com
@@ -115,7 +115,7 @@ Education:
 
         {/* Main Content */}
         <h1 className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent animate-fade-in`}>
-          John Doe
+          Pramakant Kodamsingh
         </h1>
         
         <p className={`text-xl md:text-2xl text-${currentTheme.text} mb-4 animate-fade-in`} style={{ animationDelay: '0.2s' }}>

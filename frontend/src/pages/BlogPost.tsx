@@ -35,7 +35,7 @@ const blogPosts = [
     readTime: "5 min read",
     category: "Development",
     image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=600&fit=crop",
-    author: "John Doe"
+    author: "Pramakant Kodamsingh"
   },
   {
     id: 2,
@@ -64,7 +64,7 @@ const blogPosts = [
     readTime: "7 min read",
     category: "Technology",
     image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=600&fit=crop",
-    author: "John Doe"
+    author: "Pramakant Kodamsingh"
   },
   {
     id: 3,
@@ -102,7 +102,7 @@ const blogPosts = [
     readTime: "6 min read",
     category: "Design",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=600&fit=crop",
-    author: "John Doe"
+    author: "Pramakant Kodamsingh"
   }
 ];
 

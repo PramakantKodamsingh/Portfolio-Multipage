@@ -22,7 +22,7 @@ const About = () => {
   const handleResumeDownload = () => {
     // Create a sample resume PDF content (in a real app, you'd have an actual PDF file)
     const resumeContent = `
-John Doe - Full Stack Developer Resume
+Pramakant Kodamsingh - Full Stack Developer Resume
 
 Contact Information:
 Email: john.doe@example.com
