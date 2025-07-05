@@ -9,7 +9,7 @@ require('dotenv').config();
 export default () => ({
   PROJECT: 'My Portfolio',
 
-  PORT: parseInt(process.env.PORT || '9002', 10),
+  PORT: parseInt(process.env.PORT || '8888', 10),
   ENVIRONMENT: process.env.ENVIRONMENT || 'dev',
   CLIENT_HOST: process.env.CLIENT_HOST || 'https://localhost:3000',
 
@@ -24,7 +24,7 @@ export default () => ({
   // },
 
   API: {
-    GLOBAL_PREFIX: process.env.API_GLOBAL_PREFIX || '/api',
+    GLOBAL_PREFIX: process.env.API_GLOBAL_PREFIX || 'api',
   },
 
   DB: {
@@ -32,7 +32,7 @@ export default () => ({
     PORT: parseInt(process.env.PG_PORT || '5432', 10),
     HOST: process.env.PG_HOST || 'localhost',
     USERNAME: process.env.PG_USERNAME || 'postgres',
-    PASSWORD: process.env.PG_PASSWORD || 'prama',
+    PASSWORD: process.env.PG_PASSWORD,
     DATABASE: process.env.PG_DATABASE || 'portfolio_db',
     URL: process.env.DB_URL,
   },

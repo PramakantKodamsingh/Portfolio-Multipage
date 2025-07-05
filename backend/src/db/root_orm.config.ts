@@ -13,7 +13,7 @@ module.exports = {
     database: appConfiguration().DB.DATABASE,
     url: appConfiguration().DB.URL,
     schema: 'public',
-    synchronize: false,
+    synchronize: true,
     autoLoadEntities: true,
     namingStrategy: new DefaultNamingStrategy(),
     entities: [join(__dirname, '../entities/**/*.entity{.ts,.js}')],
