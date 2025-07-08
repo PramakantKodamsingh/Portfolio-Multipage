@@ -8,9 +8,6 @@ export class About extends BaseSchema {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
-    emailId: string;
-
     @Column({ nullable: true })
     phone: string;
   

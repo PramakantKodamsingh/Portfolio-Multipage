@@ -8,6 +8,7 @@ import { SubdomainMiddleware } from './common/subdomain.middleware';
 import { AdminModule } from './api/admin/admin.module';
 import { BlogModule } from './api/blog/blog.module';
 import { ProjectModule } from './api/project/project.module';
+import { AboutModule } from './api/about/about.module';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { ProjectModule } from './api/project/project.module';
       isGlobal: true,
       load: [appConfiguration],
     }),
-    DbModule,AdminModule,BlogModule,ProjectModule
+    DbModule,AdminModule,BlogModule,ProjectModule,AboutModule
   ],
   controllers: [AppController,],
   providers: [AppService],
