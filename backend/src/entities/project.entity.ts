@@ -1,4 +1,3 @@
-// src/entities/project.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Admin } from './admin.entity';
 import { BaseSchema } from './base.entity';
@@ -18,7 +17,13 @@ export class Project extends BaseSchema {
     github_link: string;
 
     @Column({ nullable: true })
+    previewImage: string;
+
+    @Column({ nullable: true })
     live_link: string;
+
+    @Column('text', { array: true, nullable: true })
+    tools: string[];
 
     @ManyToOne(() => Admin, (admin) => admin.projects)
     admin: Admin;

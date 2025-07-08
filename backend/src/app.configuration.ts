@@ -11,7 +11,7 @@ export default () => ({
 
   PORT: parseInt(process.env.PORT || '8888', 10),
   ENVIRONMENT: process.env.ENVIRONMENT || 'dev',
-  CLIENT_HOST: process.env.CLIENT_HOST || 'https://localhost:3000',
+  CLIENT_HOST: process.env.CLIENT_HOST || 'https://localhost:8080',
 
   JWT: {
     SECRET: process.env.JWT_SECRET,

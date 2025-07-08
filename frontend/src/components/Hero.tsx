@@ -106,7 +106,7 @@ Education:
 
         {/* Main Content */}
         <h1 className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent animate-fade-in`}>
-          Pramakant Kodamsingh
+          Cybrain
         </h1>    
         <p className={`text-xl md:text-2xl text-${currentTheme.text} mb-4 animate-fade-in`} style={{ animationDelay: '0.2s' }}>
           Full Stack Developer & UI/UX Designer

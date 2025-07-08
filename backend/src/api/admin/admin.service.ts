@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Admin } from 'src/entities/admin.entity';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminService {
-  create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
-  }
+  constructor(
+    @InjectRepository(Admin)
+    private readonly adminRepository: Repository<Admin>,
+  ) { }
 
-  findAll() {
-    return `This action returns all admin`;
-  }
+  async create(dto: CreateAdminDto): Promise<Admin> {
+    const existing = await this.adminRepository.findOne({
+      where: [{ email: dto.email }, { subdomain: dto.subdomain }],
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
-  }
+    if (existing) {
+      throw new ConflictException('Admin with email or subdomain already exists');
+    }
 
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
-  }
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+    const newAdmin = this.adminRepository.create({
+      ...dto,
+      password: hashedPassword,
+    });
+
+    return this.adminRepository.save(newAdmin);
+  }
+  async findBySubdomain(subdomain: string) {
+    try {
+      return await this.adminRepository.findOne({
+        where: { subdomain },
+        // relations: ['projects', 'blogs', 'skills', 'experiences'],
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(`Failed to fetch admin for subdomain: ${subdomain}`);
+    }
   }
 }
