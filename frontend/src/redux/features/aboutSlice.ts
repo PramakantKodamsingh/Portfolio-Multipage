@@ -10,7 +10,7 @@ const aboutSlice = createSlice({
             return action.payload;
         },
         clearAbout() {
-            return null;
+            return initialState;
         },
     },
 });

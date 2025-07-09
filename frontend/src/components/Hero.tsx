@@ -5,14 +5,20 @@ import { useTheme } from '../contexts/ThemeContext';
 import createAxiosInstance from '@/axiosInstance';
 import {setAdminDetails } from '@/redux/features/adminslice';
 import { useDispatch } from 'react-redux';
+import { setAbout } from '@/redux/features/aboutSlice';
+import AboutState from '@/types/about';
+import { AdminState } from '@/types/admin';
+import { useAppselector } from '@/redux/store';
 
 const Hero = () => {
   const { currentTheme } = useTheme();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const axiosInstance=createAxiosInstance()
-  const [admin, setAdmin] = useState<any>(null);
   const dispatch = useDispatch();
+  const adminData = useAppselector(state => state.admin);
+  const aboutData = useAppselector(state => state.about);
+
 
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +46,6 @@ const Hero = () => {
     }
   });
 
-  useEffect(() => {
   const fetchAdminProfile = async () => {
     try {
       const response = await axiosInstance.get('/admin/admin-profile');
@@ -51,10 +56,32 @@ const Hero = () => {
       throw error;
     }
   };
+  const fetchAbout = async () => {
+    try {
+      const response = await axiosInstance.get('/about');
+      return response.data;
+
+    } catch (error) {
+      console.error('Failed to fetch admin about:', error);
+      throw error;
+    }
+  };
+useEffect(() => {
   fetchAdminProfile()
     .then((data) => {
-      setAdmin(data), dispatch(setAdminDetails(data));
+      dispatch(setAdminDetails(data));
     })
+    .catch((error) => {
+      console.error('Error in fetchAdminProfile:', error);
+    });
+
+  fetchAbout()
+    .then((data) => {
+      dispatch(setAbout(data)); // Dispatch the API data directly
+    })
+    .catch((error) => {
+      console.error('Error in fetchAbout:', error);
+    });
 }, []);
 
   const handleResumeDownload = () => {
@@ -106,7 +133,7 @@ Education:
               />
             ) : (
               <div className={`w-full h-full rounded-full bg-${currentTheme.card} flex items-center justify-center text-4xl font-bold text-${currentTheme.text}`}>
-                PK
+                {adminData?.name}
               </div>
             )}
             {/* Upload overlay */}
@@ -130,7 +157,7 @@ Education:
 
         {/* Main Content */}
         <h1 className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent animate-fade-in`}>
-          ck
+          {adminData?.name}
         </h1>    
         <p className={`text-xl md:text-2xl text-${currentTheme.text} mb-4 animate-fade-in`} style={{ animationDelay: '0.2s' }}>
           Full Stack Developer & UI/UX Designer
@@ -142,10 +169,10 @@ Education:
 
         {/* Social Links */}
         <div className="flex justify-center space-x-6 mb-12 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-          <a href="https://github.com" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
+          <a href={aboutData?.githubId} target="_blank" rel="noopener noreferrer "className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
             <Github size={24} />
           </a>
-          <a href="https://linkedin.com" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
+          <a href={aboutData?.linkedinId} target="_blank" rel="noopener noreferrer" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
             <Linkedin size={24} />
           </a>
           <Link to="/contact" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
