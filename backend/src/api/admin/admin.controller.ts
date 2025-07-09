@@ -33,10 +33,10 @@ export class AdminController {
     return {
       name: admin.name,
       email: admin.email,
-      projects: admin.projects,
-      blogs: admin.blogs,
-      skills: admin.skills,
-      experiences: admin.experiences,
+      // projects: admin.projects,
+      // blogs: admin.blogs,
+      // skills: admin.skills,
+      // experiences: admin.experiences,
     };
   }
 }

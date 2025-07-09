@@ -17,6 +17,9 @@ export class Blog extends BaseSchema {
     @Column({ nullable: true })
     cover_image: string;
 
+    @Column({ nullable: true })
+    blog_type: string;
+
     @ManyToOne(() => Admin, (admin) => admin.blogs)
     admin: Admin;
 }

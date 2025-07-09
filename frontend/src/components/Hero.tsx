@@ -1,12 +1,19 @@
 import { ArrowDown, Github, Linkedin, Mail, Download, Upload, Camera } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import createAxiosInstance from '@/axiosInstance';
+import {setAdminDetails } from '@/redux/features/adminslice';
+import { useDispatch } from 'react-redux';
 
 const Hero = () => {
   const { currentTheme } = useTheme();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const axiosInstance=createAxiosInstance()
+  const [admin, setAdmin] = useState<any>(null);
+  const dispatch = useDispatch();
+
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -32,6 +39,23 @@ const Hero = () => {
       setProfileImage(savedImage);
     }
   });
+
+  useEffect(() => {
+  const fetchAdminProfile = async () => {
+    try {
+      const response = await axiosInstance.get('/admin/admin-profile');
+      return response.data;
+
+    } catch (error) {
+      console.error('Failed to fetch admin profile:', error);
+      throw error;
+    }
+  };
+  fetchAdminProfile()
+    .then((data) => {
+      setAdmin(data), dispatch(setAdminDetails(data));
+    })
+}, []);
 
   const handleResumeDownload = () => {
     // Create a sample resume PDF content (in a real app, you'd have an actual PDF file)
@@ -106,7 +130,7 @@ Education:
 
         {/* Main Content */}
         <h1 className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent animate-fade-in`}>
-          Cybrain
+          ck
         </h1>    
         <p className={`text-xl md:text-2xl text-${currentTheme.text} mb-4 animate-fade-in`} style={{ animationDelay: '0.2s' }}>
           Full Stack Developer & UI/UX Designer

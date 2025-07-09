@@ -8,9 +8,6 @@ export class Skill extends BaseSchema {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
-    name: string;
-
     @Column({ nullable: true })
     level: string; // e.g., Beginner, Intermediate, Advanced
 

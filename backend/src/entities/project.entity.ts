@@ -23,7 +23,7 @@ export class Project extends BaseSchema {
     live_link: string;
 
     @Column('text', { array: true, nullable: true })
-    tools: string[];
+    tools_used: string[];
 
     @ManyToOne(() => Admin, (admin) => admin.projects)
     admin: Admin;

@@ -11,8 +11,14 @@ export class Experience extends BaseSchema {
     @Column()
     company: string;
 
+    @Column({ nullable: true })
+    location: string;
+
     @Column()
     position: string;
+
+    @Column({ default: false })
+    is_current: boolean;
 
     @Column()
     start_date: Date;
@@ -26,3 +32,4 @@ export class Experience extends BaseSchema {
     @ManyToOne(() => Admin, (admin) => admin.experiences)
     admin: Admin;
 }
+
