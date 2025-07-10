@@ -3,64 +3,49 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { About } from 'src/entities/about.entity';
 import { CreateAboutDto } from './dto/create-about.dto';
-import { UpdateAboutDto } from './dto/update-about.dto';
-import { Admin } from 'src/entities/admin.entity';
+import { UploadService } from 'src/shared/upload.service';
 
 @Injectable()
 export class AboutService {
   constructor(
     @InjectRepository(About)
     private aboutRepo: Repository<About>,
-  ) {}
+    private readonly uploadService: UploadService
+  ) { }
 
-  async create(dto: CreateAboutDto, adminId: string): Promise<About> {
-    const existing = await this.aboutRepo.findOne({ where: { admin: { id: adminId} ,is_delete:false,is_active:true } });
+  async create(
+    dto: CreateAboutDto,
+    adminId: string,
+    files: {
+      profilePicture?: Express.Multer.File[];
+      resume?: Express.Multer.File[];
+    }
+  ): Promise<About> {
+    const existing = await this.aboutRepo.findOne({
+      where: { admin: { id: adminId }, is_active: true, is_delete: false },
+    });
 
     if (existing) {
       throw new ConflictException('About section already exists for this admin');
     }
 
+    // Upload files if available
+    if (files.profilePicture?.[0]) {
+      const uploaded = await this.uploadService.uploadFile(files.profilePicture[0], 'about');
+      dto.profilePicture = uploaded.secure_url;
+    }
+
+    if (files.resume?.[0]) {
+      const uploaded = await this.uploadService.uploadFile(files.resume[0], 'about');
+      dto.resume = uploaded.secure_url;
+    }
+
     const about = this.aboutRepo.create({
       ...dto,
-      admin: { id: adminId } as Admin,
+      admin: { id: adminId },
     });
 
     return this.aboutRepo.save(about);
   }
-
-  async update(dto: UpdateAboutDto, adminId: string): Promise<About> {
-    const about = await this.aboutRepo.findOne({ where: { admin: { id: adminId },is_delete:false,is_active:true} });
-
-    if (!about) {
-      throw new NotFoundException('About section not found for this admin');
-    }
-
-    Object.assign(about, dto);
-    return this.aboutRepo.save(about);
-  }
-
-async findByAdmin(adminId: string): Promise<About> {
-  const about = await this.aboutRepo.findOne({
-    where: {
-      admin: { id: adminId },
-      is_delete: false,
-      is_active:true
-    },
-  });
-
-  if (!about) throw new NotFoundException('About section not found');
-
-  return about;
 }
 
-
-  async delete(adminId: string): Promise<void> {
-  const about = await this.aboutRepo.findOne({
-    where: { admin: { id: adminId }},
-  });
-
-  if (!about) throw new NotFoundException('About section not found');
-
-  await this.aboutRepo.remove(about); 
-}
-}

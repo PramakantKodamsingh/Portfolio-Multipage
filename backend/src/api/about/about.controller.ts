@@ -1,63 +1,68 @@
 import {
   Controller,
   Post,
-  Body,
-  Request,
   UseGuards,
-  Get,
-  Put,
-  Delete,
+  UseInterceptors,
+  UploadedFiles,
+  Request,
+  Body,
 } from '@nestjs/common';
 import { AboutService } from './about.service';
 import { CreateAboutDto } from './dto/create-about.dto';
-import { UpdateAboutDto } from './dto/update-about.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { AdminGuard } from '../../common/admin.guard';
-import { ApiTags, ApiCreatedResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiConsumes,
+  ApiBody,
+  ApiCreatedResponse,
+} from '@nestjs/swagger';
 
 @ApiTags('About')
 @Controller('about')
 @UseGuards(AdminGuard)
 export class AboutController {
-  constructor(private readonly aboutService: AboutService) {}
+  constructor(private readonly aboutService: AboutService) { }
 
   @Post()
-  @ApiCreatedResponse({ description: 'About created successfully' })
-  @ApiBody({ type: CreateAboutDto })
-  async create(@Request() req: any, @Body() dto: CreateAboutDto) {
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'profilePicture', maxCount: 1 },
+      { name: 'resume', maxCount: 1 },
+    ]),
+  )
+  @ApiCreatedResponse({ description: 'About created with uploads' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['githubId'],
+      properties: {
+        phone: { type: 'string' },
+        githubId: { type: 'string' },
+        linkedinId: { type: 'string' },
+        designation: { type: 'string' },
+        description: { type: 'string' },
+        profilePicture: { type: 'string', format: 'binary' },
+        resume: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  async create(
+    @Request() req: any,
+    @Body() body: CreateAboutDto,
+    @UploadedFiles() files: {
+      profilePicture?: Express.Multer.File[];
+      resume?: Express.Multer.File[];
+    },
+  ) {
     const admin = req['admin'];
-    const about = await this.aboutService.create(dto, admin.id);
-    return {
-      message: 'About created successfully',
-      data: about,
-    };
-  }
+    const about = await this.aboutService.create(body, admin.id, files);
 
-  @Put()
-  async update(@Request() req: any, @Body() dto: UpdateAboutDto) {
-    const admin = req['admin'];
-    const about = await this.aboutService.update(dto, admin.id);
     return {
-      message: 'About updated successfully',
+      message: 'About created successfully with files',
       data: about,
-    };
-  }
-
-  @Get()
-  async get(@Request() req: any) {
-    const admin = req['admin'];
-    const about = await this.aboutService.findByAdmin(admin.id);
-    return {
-      message: 'About fetched successfully',
-      data: about,
-    };
-  }
-
-  @Delete()
-  async delete(@Request() req: any) {
-    const admin = req['admin'];
-    await this.aboutService.delete(admin.id);
-    return {
-      message: 'About deleted successfully',
     };
   }
 }
+

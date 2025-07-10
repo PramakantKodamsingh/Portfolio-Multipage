@@ -1,39 +1,36 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAboutDto {
-
-  @ApiPropertyOptional({ example: '+919876543210', description: 'Phone number of the admin' })
+  @ApiPropertyOptional({ example: '+919876543210' })
   @IsOptional()
   @IsString()
   phone?: string;
 
-  @ApiProperty({ example: 'github_username', description: 'GitHub ID or username' })
+  @ApiProperty({ example: 'github_username' })
   @IsString()
   githubId: string;
 
-  @ApiPropertyOptional({ example: 'linkedin_username', description: 'LinkedIn ID or profile' })
+  @ApiPropertyOptional({ example: 'linkedin_username' })
   @IsOptional()
   @IsString()
   linkedinId?: string;
 
-  @ApiPropertyOptional({ example: 'https://example.com/resume.pdf', description: 'Resume URL' })
+  @ApiPropertyOptional({ example: 'Software Engineer' })
   @IsOptional()
   @IsString()
-  resume?: string;
+  designation?: string;
 
-  @ApiPropertyOptional({ example: 'https://example.com/profile.jpg', description: 'Profile picture URL' })
-  @IsOptional()
-  @IsString()
-  profilePicture?: string;
-
-  @ApiPropertyOptional({ example: 'Full-stack developer with 3+ years experience.', description: 'Short description/bio' })
+  @ApiPropertyOptional({ example: 'Full-stack developer with 3+ years.' })
   @IsOptional()
   @IsString()
   description?: string;
 
-  @ApiPropertyOptional({ example: 'Software Engineer', description: 'Professional designation' })
   @IsOptional()
   @IsString()
-  designation?: string;
+  resume?: string;
+
+  @IsOptional()
+  @IsString()
+  profilePicture?: string;
 }

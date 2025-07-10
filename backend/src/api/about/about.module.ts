@@ -3,13 +3,12 @@ import { AboutService } from './about.service';
 import { AboutController } from './about.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { About } from 'src/entities/about.entity';
-import { Admin } from 'src/entities/admin.entity';
-import { AdminService } from '../admin/admin.service';
+import { AdminModule } from '../admin/admin.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([About,Admin])],
+  imports: [TypeOrmModule.forFeature([About]),AdminModule],
   controllers: [AboutController],
-  providers: [AboutService,AdminService],
+  providers: [AboutService],
   exports:[AboutService]
 })
 export class AboutModule {}
