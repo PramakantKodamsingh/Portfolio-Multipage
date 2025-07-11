@@ -1,10 +1,11 @@
 export default interface AboutState {
     id: string;
     phone?: string;
-    githubId: string;
-    linkedinId?: string;
+    address?: string;
+    github: string;
+    linkedIn?: string;
     resume?: string;
-    profilePicture?: string;
+    profile_image?: string;
     description?: string;
     designation?: string;
 }

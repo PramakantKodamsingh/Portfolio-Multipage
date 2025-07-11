@@ -2,11 +2,16 @@ import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { useToast } from '../hooks/use-toast';
+import { useAppselector } from '@/redux/store';
+import createAxiosInstance from '@/axiosInstance';
 
 const Contact = () => {
+    const adminData = useAppselector(state => state.admin);
+    const aboutData = useAppselector(state => state.about);
+    const axiosInstance = createAxiosInstance();
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    from: '',
     subject: '',
     message: '',
   });
@@ -19,32 +24,40 @@ const Contact = () => {
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const response = await axiosInstance.post('/auth/send-email', formData);
+
       toast({
-        title: "Message sent successfully!",
+        title: response.data.message,
         description: "Thank you for reaching out. I'll get back to you soon.",
       });
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ name: '', from: '', subject: '', message: '' });
+    } catch (err: any) {
+      toast({
+        title: "Failed to send message",
+        description: err?.response?.data?.message,
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
-
+  
+  
   const contactInfo = [
-    { icon: Mail, label: 'Email', value: 'john.doe@example.com', href: 'mailto:john.doe@example.com' },
-    { icon: Phone, label: 'Phone', value: '+1 (555) 123-4567', href: 'tel:+15551234567' },
-    { icon: MapPin, label: 'Location', value: 'San Francisco, CA', href: '#' },
+    { icon: Mail, label: 'Email', value: `${adminData?.email}` || '', href: 'mailto:${adminData?.email}' },
+    { icon: Phone, label: 'Phone', value: `+91 ${aboutData?.phone}` || '', href: `tel:+91 ${aboutData?.phone}` },
+    { icon: MapPin, label: 'Location', value: `${aboutData?.address}`, href: '#' },
   ];
 
   const socialLinks = [
-    { icon: Github, label: 'GitHub', href: 'https://github.com', color: 'hover:text-gray-800' },
-    { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com', color: 'hover:text-blue-600' },
-    { icon: Twitter, label: 'Twitter', href: 'https://twitter.com', color: 'hover:text-blue-400' },
+    { icon: Github, label: 'GitHub', href: `${aboutData?.github}`, color: 'hover:text-gray-800' },
+    { icon: Linkedin, label: 'LinkedIn', href: `${aboutData?.linkedIn}`, color: 'hover:text-blue-600' },
+    // { icon: Twitter, label: 'Twitter', href: 'https://twitter.com', color: 'hover:text-blue-400' },
   ];
 
   return (
@@ -92,8 +105,8 @@ const Contact = () => {
                   <input
                     type="email"
                     id="email"
-                    name="email"
-                    value={formData.email}
+                    name="from"
+                    value={formData.from}
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
@@ -129,7 +142,7 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
+                  className="w-full px-4 py-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
                   placeholder="Tell me about your project or just say hello!"
                 />
               </div>
@@ -198,16 +211,17 @@ const Contact = () => {
             </div>
 
             {/* Quick Response */}
-            <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-8 text-white shadow-xl">
-              <h3 className="text-xl font-bold mb-4">Quick Response</h3>
-              <p className="mb-4">
-                I typically respond to emails within 24 hours. For urgent matters, feel free to give me a call!
-              </p>
-              <div className="flex items-center gap-2 text-sm">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span>Usually available 9 AM - 6 PM PST</span>
-              </div>
-            </div>
+
+          </div>
+        </div>
+        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-8 mt-8 text-white shadow-xl">
+          <h3 className="text-xl font-bold mb-4">Quick Response</h3>
+          <p className="mb-4">
+            I typically respond to emails within 24 hours. For urgent matters, feel free to give me a call!
+          </p>
+          <div className="flex items-center gap-2 text-sm">
+            <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            <span>Usually available 9 AM - 6 PM PST</span>
           </div>
         </div>
       </div>

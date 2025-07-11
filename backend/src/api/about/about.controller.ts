@@ -20,6 +20,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
+import { UpdateAboutDto } from './dto/update-about.dto';
 
 @ApiTags('About')
 @Controller('about')
@@ -31,7 +32,7 @@ export class AboutController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
     FileFieldsInterceptor([
-      { name: 'profilePicture', maxCount: 1 },
+      { name: 'profile_image', maxCount: 1 },
       { name: 'resume', maxCount: 1 },
     ]),
   )
@@ -39,14 +40,15 @@ export class AboutController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['githubId'],
+      required: ['github'],
       properties: {
         phone: { type: 'string' },
-        githubId: { type: 'string' },
-        linkedinId: { type: 'string' },
+        address: { type: 'string' },
+        github: { type: 'string' },
+        linkedIn: { type: 'string' },
         designation: { type: 'string' },
         description: { type: 'string' },
-        profilePicture: { type: 'string', format: 'binary' },
+        profile_image: { type: 'string', format: 'binary' },
         resume: { type: 'string', format: 'binary' },
       },
     },
@@ -55,7 +57,7 @@ export class AboutController {
     @Request() req: any,
     @Body() body: CreateAboutDto,
     @UploadedFiles() files: {
-      profilePicture?: Express.Multer.File[];
+      profile_image?: Express.Multer.File[];
       resume?: Express.Multer.File[];
     },
   ) {
@@ -81,7 +83,7 @@ async getAbout(@Request() req: any) {
 @ApiConsumes('multipart/form-data')
 @UseInterceptors(
   FileFieldsInterceptor([
-    { name: 'profilePicture', maxCount: 1 },
+    { name: 'profile_image', maxCount: 1 },
     { name: 'resume', maxCount: 1 },
   ]),
 )
@@ -91,20 +93,21 @@ async getAbout(@Request() req: any) {
     type: 'object',
     properties: {
       phone: { type: 'string' },
-      githubId: { type: 'string' },
-      linkedinId: { type: 'string' },
+      address: { type: 'string' },
+      github: { type: 'string' },
+      linkedIn: { type: 'string' },
       designation: { type: 'string' },
       description: { type: 'string' },
-      profilePicture: { type: 'string', format: 'binary' },
+      profile_image: { type: 'string', format: 'binary' },
       resume: { type: 'string', format: 'binary' },
     },
   },
 })
 async update(
   @Request() req: any,
-  @Body() body: Partial<CreateAboutDto>,
+  @Body() body: UpdateAboutDto,
   @UploadedFiles() files: {
-    profilePicture?: Express.Multer.File[];
+    profile_image?: Express.Multer.File[];
     resume?: Express.Multer.File[];
   },
 ) {
@@ -125,6 +128,5 @@ async delete(@Request() req: any) {
     message: 'About deleted successfully',
   };
 }
-
 }
 

@@ -1,9 +1,10 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, Res } from '@nestjs/common';
 import { UploadService } from './upload.service';
+import { ResendService } from './resend.service';
 
 @Global()
 @Module({
-  providers: [UploadService],
-  exports: [UploadService],
+  providers: [UploadService,ResendService],
+  exports: [UploadService,ResendService],
 })
 export class SharedModule { }

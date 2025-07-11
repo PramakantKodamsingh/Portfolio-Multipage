@@ -10,18 +10,21 @@ export class About extends BaseSchema {
 
     @Column({ nullable: true })
     phone: string;
+
+    @Column({ nullable: true })
+    address: string;
   
     @Column()
-    githubId: string;
+    github: string;
     
     @Column({nullable: true})
-    linkedinId: string;
+    linkedIn: string;
 
     @Column({ nullable: true })
     resume: string;
 
     @Column({ nullable: true })
-    profilePicture: string;
+    profile_image: string;
 
     @Column('text', { nullable: true })
     description: string;

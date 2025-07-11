@@ -18,7 +18,7 @@ export class AboutService {
     dto: CreateAboutDto,
     adminId: string,
     files: {
-      profilePicture?: Express.Multer.File[];
+      profile_image?: Express.Multer.File[];
       resume?: Express.Multer.File[];
     }
   ): Promise<About> {
@@ -31,9 +31,9 @@ export class AboutService {
     }
 
     // Upload files if available
-    if (files.profilePicture?.[0]) {
-      const uploaded = await this.uploadService.uploadFile(files.profilePicture[0], 'about');
-      dto.profilePicture = uploaded.secure_url;
+    if (files.profile_image?.[0]) {
+      const uploaded = await this.uploadService.uploadFile(files.profile_image[0], 'about');
+      dto.profile_image = uploaded.secure_url;
     }
 
     if (files.resume?.[0]) {
@@ -63,7 +63,7 @@ async update(
   dto: UpdateAboutDto,
   adminId: string,
   files: {
-    profilePicture?: Express.Multer.File[];
+    profile_image?: Express.Multer.File[];
     resume?: Express.Multer.File[];
   }
 ): Promise<About> {
@@ -76,9 +76,9 @@ async update(
   }
 
   // Handle file uploads if new files are provided
-  if (files.profilePicture?.[0]) {
-    const uploaded = await this.uploadService.uploadFile(files.profilePicture[0], 'about');
-    dto.profilePicture = uploaded.secure_url;
+  if (files.profile_image?.[0]) {
+    const uploaded = await this.uploadService.uploadFile(files.profile_image[0], 'about');
+    dto.profile_image = uploaded.secure_url;
   }
 
   if (files.resume?.[0]) {
@@ -97,11 +97,7 @@ async delete(adminId: string): Promise<void> {
   if (!about) {
     throw new NotFoundException('About section not found');
   }
-
-  about.is_active = false;
-  about.is_delete = true;
-  await this.aboutRepo.save(about);
+  await this.aboutRepo.remove(about);
 }
-
 }
 

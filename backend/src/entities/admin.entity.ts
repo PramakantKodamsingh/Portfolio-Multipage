@@ -7,6 +7,7 @@ import { Experience } from './experience.entity';
 import { Skill } from './skill.entity';
 import { IsString, Matches } from 'class-validator';
 import { About } from './about.entity';
+import { Education } from './education.entity';
 
 
 @Entity('admins')
@@ -43,4 +44,6 @@ export class Admin extends BaseSchema {
     @OneToMany(() => Skill, (skill) => skill.admin)
     skills: Skill[];
 
+    @OneToMany(() => Education, (education) => education.admin)
+    educations: Education[];
 }

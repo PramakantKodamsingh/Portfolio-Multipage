@@ -48,7 +48,14 @@ const Blog = () => {
       {/* Header Section */}
       <section className="pt-24 pb-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className={`text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent animate-fade-in`}>
+          <h1
+            className={`
+    text-5xl font-bold 
+    bg-clip-text text-transparent 
+    bg-gradient-to-r ${currentTheme.primary}
+    inline-block leading-tight
+  `}
+          >
             Blog
           </h1>
           <p className={`text-xl text-${currentTheme.text} mb-8 animate-fade-in`} style={{ animationDelay: '0.2s' }}>

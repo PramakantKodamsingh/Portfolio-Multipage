@@ -84,41 +84,6 @@ useEffect(() => {
     });
 }, []);
 
-  const handleResumeDownload = () => {
-    // Create a sample resume PDF content (in a real app, you'd have an actual PDF file)
-    const resumeContent = `
-Pramakant Kodamsingh - Full Stack Developer Resume
-
-Contact Information:
-Email: john.doe@example.com
-Phone: (555) 123-4567
-LinkedIn: linkedin.com/in/johndoe
-
-Experience:
-• Senior Frontend Developer at Tech Corp (2020-Present)
-• Full Stack Developer at StartupXYZ (2018-2020)
-• Junior Developer at WebAgency (2017-2018)
-
-Skills:
-• React, TypeScript, Node.js, Python
-• UI/UX Design, Figma, Adobe Creative Suite
-• AWS, Docker, PostgreSQL
-
-Education:
-• Bachelor of Computer Science - University of Technology (2017)
-    `;
-
-    const blob = new Blob([resumeContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'John_Doe_Resume.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <section className="min-h-screen flex items-center justify-center px-4 pt-16">
       <div className="max-w-4xl mx-auto text-center">
@@ -127,7 +92,7 @@ Education:
           <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-r ${currentTheme.primary} p-1 animate-pulse relative overflow-hidden`}>
             {aboutData ? (
               <img 
-                src={aboutData?.profilePicture} 
+                src={aboutData?.profile_image} 
                 alt="Profile" 
                 className="w-full h-full rounded-full object-cover"
               />
@@ -157,16 +122,16 @@ Education:
 
         {/* Main Content */}
 <div className="inline-block px-4 py-2 rounded-md">
-  <h1
-    className={`text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in`}
-    style={{
-      backgroundImage: 'linear-gradient(to right, #2563eb, #4b5563)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-    }}
-  >
-    {adminData?.name}
-  </h1>
+          <h1
+            className={`
+    text-5xl font-bold 
+    bg-clip-text text-transparent 
+    bg-gradient-to-r ${currentTheme.primary}
+    inline-block leading-tight
+  `}
+          >
+            {adminData?.name }
+          </h1>
 </div>
 
 
@@ -185,10 +150,10 @@ Education:
                               <a href={aboutData?.resume} target="_blank" rel="noopener noreferrer" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
             <FileUser size={24} />
           </a>
-          <a href={aboutData?.githubId} target="_blank" rel="noopener noreferrer "className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
+          <a href={aboutData?.github} target="_blank" rel="noopener noreferrer "className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
             <Github size={24} />
           </a>
-          <a href={aboutData?.linkedinId} target="_blank" rel="noopener noreferrer" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
+          <a href={aboutData?.linkedIn} target="_blank" rel="noopener noreferrer" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
             <Linkedin size={24} />
           </a>
           <Link to="/contact" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>

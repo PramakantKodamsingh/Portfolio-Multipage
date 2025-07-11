@@ -31,5 +31,41 @@ export class ProjectService {
       throw new InternalServerErrorException('Failed to fetch projects: ' + error.message);
     }
   }
+  async getById(projectId: string, adminId: string): Promise<Project> {
+    const project = await this.projectRepository.findOne({
+      where: { id: projectId, admin: { id: adminId } },
+    });
+
+    if (!project) {
+      throw new BadRequestException('Project not found or access denied');
+    }
+
+    return project;
+  }
   
+  async update(projectId: string, dto: CreateProjectDto, adminId: string): Promise<Project> {
+    const project = await this.projectRepository.findOne({
+      where: { id: projectId, admin: { id: adminId } },
+    });
+
+    if (!project) {
+      throw new BadRequestException('Project not found or access denied');
+    }
+
+    Object.assign(project, dto);
+    return await this.projectRepository.save(project);
+  }
+  async delete(projectId: string, adminId: string): Promise<void> {
+    const project = await this.projectRepository.findOne({
+      where: { id: projectId, admin: { id: adminId } },
+    });
+
+    if (!project) {
+      throw new BadRequestException('Project not found or access denied');
+    }
+    project.is_active = false;
+    project.is_delete = true;
+    await this.projectRepository.save(project);
+  }
+    
 }

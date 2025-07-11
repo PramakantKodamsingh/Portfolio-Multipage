@@ -14,8 +14,8 @@ export class Skill extends BaseSchema {
     @Column({ nullable: true })
     category: string; // e.g., Frontend, Backend, DevOps
 
-    @Column({ nullable: true })
-    icon: string; // icon URL or class name if using icons
+    @Column('float', { nullable: true })
+    percentage: number; // e.g., 90 (%)
 
     @ManyToOne(() => Admin, (admin) => admin.skills, { nullable: true })
     admin: Admin;
