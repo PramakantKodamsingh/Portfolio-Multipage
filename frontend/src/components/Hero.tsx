@@ -1,4 +1,4 @@
-import { ArrowDown, Github, Linkedin, Mail, Download, Upload, Camera } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, Mail, FileUser, Upload, Camera } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
@@ -77,7 +77,7 @@ useEffect(() => {
 
   fetchAbout()
     .then((data) => {
-      dispatch(setAbout(data)); // Dispatch the API data directly
+      dispatch(setAbout(data.data)); // Dispatch the API data directly
     })
     .catch((error) => {
       console.error('Error in fetchAbout:', error);
@@ -123,17 +123,17 @@ Education:
     <section className="min-h-screen flex items-center justify-center px-4 pt-16">
       <div className="max-w-4xl mx-auto text-center">
         {/* Profile Image */}
-        <div className="mb-8 relative">
+        <div className="m-8 relative">
           <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-r ${currentTheme.primary} p-1 animate-pulse relative overflow-hidden`}>
-            {profileImage ? (
+            {aboutData ? (
               <img 
-                src={profileImage} 
+                src={aboutData?.profilePicture} 
                 alt="Profile" 
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
               <div className={`w-full h-full rounded-full bg-${currentTheme.card} flex items-center justify-center text-4xl font-bold text-${currentTheme.text}`}>
-                {adminData?.name}
+                {adminData?.name[0]}
               </div>
             )}
             {/* Upload overlay */}
@@ -156,11 +156,24 @@ Education:
         </div>
 
         {/* Main Content */}
-        <h1 className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r ${currentTheme.primary} bg-clip-text text-transparent animate-fade-in`}>
-          {adminData?.name}
-        </h1>    
+<div className="inline-block px-4 py-2 rounded-md">
+  <h1
+    className={`text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in`}
+    style={{
+      backgroundImage: 'linear-gradient(to right, #2563eb, #4b5563)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+    }}
+  >
+    {adminData?.name}
+  </h1>
+</div>
+
+
+
+ 
         <p className={`text-xl md:text-2xl text-${currentTheme.text} mb-4 animate-fade-in`} style={{ animationDelay: '0.2s' }}>
-          Full Stack Developer & UI/UX Designer
+          {aboutData?.description}
         </p>
         
         <p className={`text-lg text-${currentTheme.text} opacity-70 mb-8 max-w-2xl mx-auto animate-fade-in`} style={{ animationDelay: '0.4s' }}>
@@ -169,6 +182,9 @@ Education:
 
         {/* Social Links */}
         <div className="flex justify-center space-x-6 mb-12 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+                              <a href={aboutData?.resume} target="_blank" rel="noopener noreferrer" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
+            <FileUser size={24} />
+          </a>
           <a href={aboutData?.githubId} target="_blank" rel="noopener noreferrer "className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
             <Github size={24} />
           </a>
@@ -178,13 +194,7 @@ Education:
           <Link to="/contact" className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}>
             <Mail size={24} />
           </Link>
-          <button 
-            onClick={handleResumeDownload}
-            className={`p-3 bg-${currentTheme.card} backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 text-${currentTheme.text} hover:text-${currentTheme.accent}`}
-            title="Download Resume"
-          >
-            <Download size={24} />
-          </button>
+
         </div>
 
         {/* CTA Buttons */}

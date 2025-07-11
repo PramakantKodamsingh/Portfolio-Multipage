@@ -1,9 +1,13 @@
 import { Code, Palette, Zap, Heart, Download } from 'lucide-react';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAppselector } from '@/redux/store';
 
 const About = () => {
   const { currentTheme } = useTheme();
+    const adminData = useAppselector(state => state.admin);
+  const aboutData = useAppselector(state => state.about);
+  
 
   const skills = [
     { name: 'Frontend Development', level: 90, color: currentTheme.primary },
@@ -19,40 +23,44 @@ const About = () => {
     { icon: Heart, title: 'User Focus', description: 'Building with empathy and accessibility' },
   ];
 
-  const handleResumeDownload = () => {
-    // Create a sample resume PDF content (in a real app, you'd have an actual PDF file)
-    const resumeContent = `
-Pramakant Kodamsingh - Full Stack Developer Resume
+const handleResumeDownload = async () => {
+  if (!aboutData?.resume || !adminData?.name) {
+    console.error('Missing resume URL or admin name');
+    return;
+  }
+  try {
+    // Modify Cloudinary URL for forced download
+    const downloadUrl = aboutData.resume.replace(
+      '/upload/',
+      '/upload/fl_attachment/'
+    );
+    const response = await fetch(downloadUrl);
+    if (!response.ok) throw new Error('Failed to fetch resume');
 
-Contact Information:
-Email: john.doe@example.com
-Phone: (555) 123-4567
-LinkedIn: linkedin.com/in/johndoe
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const formattedName = adminData.name
+      .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special chars
+      .replace(/\s+/g, '_'); // Replace spaces with underscores
+    const fileName = `${formattedName}_Resume.pdf`;
 
-Experience:
-• Senior Frontend Developer at Tech Corp (2020-Present)
-• Full Stack Developer at StartupXYZ (2018-2020)
-• Junior Developer at WebAgency (2017-2018)
+    // Create and trigger download
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
 
-Skills:
-• React, TypeScript, Node.js, Python
-• UI/UX Design, Figma, Adobe Creative Suite
-• AWS, Docker, PostgreSQL
+    // Cleanup
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl); // Free memory
+    }, 100);
 
-Education:
-• Bachelor of Computer Science - University of Technology (2017)
-    `;
-
-    const blob = new Blob([resumeContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'John_Doe_Resume.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+  } catch (error) {
+    console.error('Download failed:', error);
+  }
+};
 
   return (
     <div className="min-h-screen pt-20">

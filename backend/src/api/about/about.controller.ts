@@ -6,6 +6,9 @@ import {
   UploadedFiles,
   Request,
   Body,
+  Delete,
+  Put,
+  Get,
 } from '@nestjs/common';
 import { AboutService } from './about.service';
 import { CreateAboutDto } from './dto/create-about.dto';
@@ -64,5 +67,64 @@ export class AboutController {
       data: about,
     };
   }
+  @Get()
+@ApiCreatedResponse({ description: 'Get current About section' })
+async getAbout(@Request() req: any) {
+  const admin = req['admin'];
+  const about = await this.aboutService.getByAdminId(admin.id);
+  return {
+    message: 'About fetched successfully',
+    data: about,
+  };
+}
+@Put()
+@ApiConsumes('multipart/form-data')
+@UseInterceptors(
+  FileFieldsInterceptor([
+    { name: 'profilePicture', maxCount: 1 },
+    { name: 'resume', maxCount: 1 },
+  ]),
+)
+@ApiCreatedResponse({ description: 'About updated with uploads' })
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      phone: { type: 'string' },
+      githubId: { type: 'string' },
+      linkedinId: { type: 'string' },
+      designation: { type: 'string' },
+      description: { type: 'string' },
+      profilePicture: { type: 'string', format: 'binary' },
+      resume: { type: 'string', format: 'binary' },
+    },
+  },
+})
+async update(
+  @Request() req: any,
+  @Body() body: Partial<CreateAboutDto>,
+  @UploadedFiles() files: {
+    profilePicture?: Express.Multer.File[];
+    resume?: Express.Multer.File[];
+  },
+) {
+  const admin = req['admin'];
+  const about = await this.aboutService.update(body, admin.id, files);
+
+  return {
+    message: 'About updated successfully',
+    data: about,
+  };
+}
+@Delete()
+@ApiCreatedResponse({ description: 'About deleted successfully' })
+async delete(@Request() req: any) {
+  const admin = req['admin'];
+  await this.aboutService.delete(admin.id);
+  return {
+    message: 'About deleted successfully',
+  };
+}
+
 }
 
